@@ -9,6 +9,9 @@ export const CstTekst = {
     AccountKeuze: 'Choice account',
     DSPtitle: 'Dune Spice actions',
     DspTransfer: 'Send to an other account',
+    HarvesterTitle: 'Harvesters',
+    HarvesterBuy: 'Buy a harvester',
+    HarvesterList: 'Owned harvesters',
     VoorEidereen: 'Beschikbaar voor iedereen',
     EnkelContractEigenaar: 'Enkel contract eigenaar',
     EnkelBoeker: 'Enkel voor de boeker',
@@ -43,7 +46,8 @@ export const CstMetaMask = 'metamask'
 export const CstNetwerken = [
   {
     naam: 'Ganache',
-    contractadres: '0x2Ed99Cefd3318f389fc2e4dcd3DF5D577Cd5A354',
+    DuneSpiceContract: '0x99e488818Ae3a242D07E3Eb8e8eC2De1B0992679',
+    HarvestersContract: '0x77a6EeE6D2dbb0D40f48728Ac95F2c3268Ad6444',
     url: 'ws://127.0.0.1:7545',
   },
   {

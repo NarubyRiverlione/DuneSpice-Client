@@ -20,7 +20,7 @@ export const VerwerkFout = (fout) => {
   }
 }
 
-const VindContract = (naam) => CstNetwerken.find((netwerk) => netwerk.naam === naam).contractadres
+const VindContract = (naam) => CstNetwerken.find((netwerk) => netwerk.naam === naam).DuneSpiceContract
 
 export default class ApiDuneSpice {
   constructor(netwerkNaam, account, EthProvider) {
@@ -30,9 +30,10 @@ export default class ApiDuneSpice {
     this.DuneSpice = this.EthProvider.OphalenContract(DuneSpiceJson.abi, this.contractadres)
   }
 
-  TotalSupply = () => (
-    this.DuneSpice.methods.totalSupply().call()
-  )
+  TotalSupply = async () => {
+    const supply = await this.DuneSpice.methods.totalSupply().call()
+    return parseFloat(supply, 10)
+  }
 
   ContractPauze = () => (
     this.DuneSpice.methods.HandRem().send({ from: this.address })

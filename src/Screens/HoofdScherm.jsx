@@ -1,21 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react'
-import { DefaultButton } from '@fluentui/react'
+// import { DefaultButton } from '@fluentui/react'
 
 import { CstTekst } from '../Cst'
 
-import ApiDuneSpice, { VerwerkFout } from '../Api/ApiDuneSpice'
+import ApiDuneSpice from '../Api/ApiDuneSpice'
+import ApiHarvester from '../Api/ApiHarvester'
 
 import KiesNetwerk from '../Components/KiesNetwerk'
 import TransferTokens from '../Components/TransferTokens'
-import PauseerContract from '../Components/PauseerContract'
+import ShowOwnHarvesters from '../Components/ShowOwnHarvesters'
+import BuyHarvester from '../Components/BuyHarvester'
+// import PauseerContract from '../Components/PauseerContract'
 
 const { HoofdScherm: Txt } = CstTekst
 
 let DuneSpiceApi
+let HarvesterApi
 
 const HoofdScherm = () => {
-  // const [Api, setApi] = useState()
   const [TotalSupply, setTotalSupply] = useState()
   const [BalansEth, setBalansEth] = useState()
   const [BalansDSP, setBalansDSP] = useState()
@@ -26,14 +29,15 @@ const HoofdScherm = () => {
     // beveilig terug eerste dummy optie kiezen bij accounts
     if (!provider || !accountAdres) {
       setBalansEth()
-      // setApi()
       DuneSpiceApi = null
+      HarvesterApi = null
       return
     }
     DuneSpiceApi = new ApiDuneSpice(netwerkNaam, accountAdres, provider)
+    HarvesterApi = new ApiHarvester(netwerkNaam, accountAdres, provider)
+
     const totalSupply = await DuneSpiceApi.TotalSupply()
     setTotalSupply(totalSupply)
-    // setApi(DuneSpiceApi)
     const balansEth = await provider.OphalenBalans(accountAdres)
     setBalansEth(balansEth)
     const balansDSP = await DuneSpiceApi.TokenBalans(accountAdres)
@@ -51,6 +55,18 @@ const HoofdScherm = () => {
     }
   }
 
+  const Buy = async () => {
+    try {
+      await HarvesterApi.Buy()
+      setError()
+      setWaitOnBlock(false)
+    } catch (fout) {
+      setError(fout)
+      setWaitOnBlock(false)
+    }
+  }
+
+  /*
   const ContractActie = async (actie) => {
     try {
       debugger
@@ -63,7 +79,7 @@ const HoofdScherm = () => {
       setWaitOnBlock(false)
     }
   }
-
+*/
   return (
     <React.Fragment>
       <h1>{Txt.Title}</h1>
@@ -88,6 +104,13 @@ const HoofdScherm = () => {
           <h2>{Txt.DSPtitle}</h2>
           <h4>{Txt.DspTransfer}</h4>
           <TransferTokens Action={TransferDSP} />
+          <br />
+          <br />
+          <hr />
+          <h2>{Txt.HarvesterTitle}</h2>
+          <h4>{Txt.HarvesterList}</h4>
+          <BuyHarvester Buy={Buy} />
+          <ShowOwnHarvesters Api={HarvesterApi} />
         </div>
       )}
     </React.Fragment>
